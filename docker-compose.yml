@@ -1,19 +1,21 @@
-# @see https://docs.docker.com/compose/compose-file/
-version: '3.4'
+# 本仓库集成测试依赖（go test ./...）。
+# 宿主机 6379/27017 常被其他服务占用，这里固定用 6380/27018。
+# 测试默认连这两个地址，可用环境变量覆盖：
+#   LIBDB_TEST_REDIS_ADDR / LIBDB_TEST_MONGO_URI
 services:
   mongodb-test:
-    container_name: mongo-test
-    image: mongo:4.0
+    container_name: libdb-mongo-test
+    image: mongo:7.0
     restart: unless-stopped
     ports:
-      - 127.0.0.1:27017:27017
+      - 127.0.0.1:27018:27017
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=root
 
   redis-test:
-    container_name: redis-test
-    image: redis:5.0.7-alpine
+    container_name: libdb-redis-test
+    image: redis:7-alpine
     restart: unless-stopped
     ports:
-      - 127.0.0.1:6379:6379
+      - 127.0.0.1:6380:6379
